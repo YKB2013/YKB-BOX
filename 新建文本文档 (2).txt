@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>我的技术小站</title>
+    <style>
+        body{text-align:center;margin-top:50px;font-family:微软雅黑;background:#f5f5f5;}
+        a{display:inline-block;margin:20px;font-size:20px;text-decoration:none;color:#0066cc;}
+        a:hover{color:#ff4444;}
+    </style>
+</head>
+<body>
+    <h1>欢迎来到我的技术小站</h1>
+    <p>怀旧系统科普 | Windows历史 | 电脑基础知识</p>
+    <br>
+    <a href="winold.html">怀旧系统介绍</a>
+    <br>
+    <a href="about.html">关于本站</a>
+    <br>
+    <a href="download.html">WinXP/2000 网盘下载</a>
+</body>
+</html>

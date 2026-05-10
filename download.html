@@ -9,6 +9,7 @@
         .warn{color:red;font-weight:bold;}
         .btn{display:inline-block;padding:8px 16px;background:#0066cc;color:#fff;text-decoration:none;border-radius:4px;}
         .btn:hover{background:#004499;}
+        .count{color:#666;font-size:14px;margin-left:15px;}
     </style>
 </head>
 <body>
@@ -17,15 +18,35 @@
 
     <h3>Windows 2000</h3>
     <p>经典NT内核怀旧系统，适合虚拟机体验</p>
-    <a class="btn" href="https://pan.quark.cn/s/1653e48000a0" target="_blank">夸克网盘下载</a>
+    <a class="btn" href="https://pan.quark.cn/s/1653e48000a0" target="_blank" onclick="addCount('win2000')">夸克网盘下载</a>
+    <span class="count">已下载：<span id="win2000_num">0</span> 次</span>
 
     <h3>Windows XP</h3>
     <p>经典怀旧系统，虚拟机专用</p>
-    <a class="btn" href="https://pan.quark.cn/s/bca5851985dd" target="_blank">夸克网盘下载</a>
+    <a class="btn" href="https://pan.quark.cn/s/bca5851985dd" target="_blank" onclick="addCount('winxp')">夸克网盘下载</a>
+    <span class="count">已下载：<span id="winxp_num">0</span> 次</span>
 
     <br><br>
     <p class="warn">温馨提示：仅用于个人学习研究，下载后请24小时内自行保存或删除</p>
     <br>
     <a href="index.html">← 返回首页</a>
+
+<script>
+// 读取并显示下载次数
+function showCount(){
+    document.getElementById("win2000_num").innerText = localStorage.getItem("win2000") || 0;
+    document.getElementById("winxp_num").innerText = localStorage.getItem("winxp") || 0;
+}
+
+// 点击下载计数+1
+function addCount(name){
+    let num = parseInt(localStorage.getItem(name) || "0");
+    localStorage.setItem(name, num + 1);
+    showCount();
+}
+
+// 页面加载立刻显示次数
+showCount();
+</script>
 </body>
 </html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>留言板 - YKB-BOX</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:Microsoft YaHei;background:#f5f5f5;padding:30px}
+        .box{max-width:800px;margin:0 auto;background:white;padding:25px;border-radius:10px;box-shadow:0 0 10px #0000001a}
+        h1{margin-bottom:20px;color:#003399}
+        input,textarea{width:100%;padding:12px;margin:8px 0;border:1px solid #ddd;border-radius:6px;font-size:15px}
+        button{background:#0066cc;color:white;padding:12px 20px;border:none;border-radius:6px;cursor:pointer}
+        .msg{background:#f9f9f9;padding:15px;margin:10px 0;border-left:4px solid #0066cc}
+        .name{font-weight:bold;color:#003399}
+        .time{font-size:12px;color:#888;margin-left:10px}
+        .content{margin-top:5px}
+        .back{margin-top:20px;display:inline-block}
+    </style>
+</head>
+<body>
+<div class="box">
+    <h1>📝 留言板</h1>
+    <input type="text" id="name" placeholder="输入你的昵称">
+    <textarea id="content" rows="4" placeholder="说点什么..."></textarea>
+    <button onclick="sendMsg()">发表留言</button>
+    <div id="msgList"></div>
+    <br><a href="index.html" class="back">← 返回首页</a>
+</div>
+
+<script>
+function sendMsg(){
+    let n=document.getElementById("name").value;
+    let c=document.getElementById("content").value;
+    if(!n||!c){alert("昵称和内容都要填哦！");return}
+    let msg={name:n,content:c,time:new Date().toLocaleString()};
+    let list=JSON.parse(localStorage.getItem("msgList")||"[]");
+    list.unshift(msg);
+    localStorage.setItem("msgList",JSON.stringify(list));
+    showMsg();
+    document.getElementById("content").value="";
+}
+function showMsg(){
+    let list=JSON.parse(localStorage.getItem("msgList")||"[]");
+    let html="";
+    list.forEach(m=>{
+        html+=`<div class="msg"><span class="name">${m.name}</span><span class="time">${m.time}</span><div class="content">${m.content}</div></div>`;
+    });
+    document.getElementById("msgList").innerHTML=html;
+}
+showMsg();
+</script>
+</body>
+</html>

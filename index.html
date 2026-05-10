@@ -11,7 +11,6 @@
             background:#0a0a1a;
             color:#fff;
             overflow-x:hidden;
-            /* 隐藏默认鼠标 */
             cursor: none;
         }
         a{
@@ -35,7 +34,6 @@
             height:100vh;
             z-index:-1;
         }
-        /* 自定义鼠标 */
         .cursor {
             width: 16px;
             height: 16px;
@@ -47,7 +45,6 @@
             transform: translate(-50%, -50%);
             mix-blend-mode: difference;
         }
-        /* 跟随的尾巴星星 */
         .cursor-trail {
             width: 8px;
             height: 8px;
@@ -59,14 +56,23 @@
             opacity: 0.8;
             transform: translate(-50%, -50%);
         }
+        #live2d{
+            position: fixed;
+            right: 15px;
+            bottom: 15px;
+            z-index: 999;
+            width: 280px;
+            height: 350px;
+            pointer-events: auto;
+        }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/live2d-widget@3.1.4/lib/L2Dwidget.min.js"></script>
 </head>
 <body>
     <canvas id="starfield"></canvas>
-
-    <!-- 自定义鼠标和尾巴 -->
     <div class="cursor"></div>
     <div class="cursor-trail"></div>
+    <div id="live2d"></div>
 
     <h1>欢迎来到我的技术小站</h1>
     <p>怀旧系统科普 | Windows历史 | 电脑基础知识</p>
@@ -79,80 +85,79 @@
     <br>
     <a href="about.html">关于本站</a>
 
-    <script>
-        // 星空背景代码
-        const canvas = document.getElementById('starfield');
-        const ctx = canvas.getContext('2d');
-        let stars = [];
+<script>
+// ======================================
+// 一进网站就弹出 三语欢迎（你好 + Hello + Bonjour）
+alert("你好\nHello\nBonjour");
+// ======================================
 
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
+// 星空背景
+const canvas = document.getElementById('starfield');
+const ctx = canvas.getContext('2d');
+let stars = [];
 
-        class Star {
-            constructor() {
-                this.reset();
-            }
-            reset() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.speed = Math.random() * 0.5 + 0.1;
-                this.size = Math.random() * 1.5 + 0.5;
-            }
-            update() {
-                this.x -= this.speed;
-                if (this.x < 0) this.reset();
-            }
-            draw() {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(255,255,255,0.8)';
-                ctx.fill();
-            }
-        }
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
 
-        for (let i = 0; i < 150; i++) {
-            stars.push(new Star());
-        }
+class Star {
+    constructor() {this.reset();}
+    reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.speed = Math.random() * 0.5 + 0.1;
+        this.size = Math.random() * 1.5 + 0.5;
+    }
+    update() {if(this.x<0)this.reset();this.x-=this.speed;}
+    draw() {
+        ctx.beginPath();
+        ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
+        ctx.fillStyle='rgba(255,255,255,0.8)';
+        ctx.fill();
+    }
+}
+for(let i=0;i<150;i++) stars.push(new Star());
+function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    stars.forEach(s=>{s.update();s.draw();});
+    requestAnimationFrame(animate);
+}
+animate();
 
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            stars.forEach(star => {
-                star.update();
-                star.draw();
-            });
-            requestAnimationFrame(animate);
-        }
-        animate();
+// 自定义鼠标
+const cursor = document.querySelector('.cursor');
+const trail = document.querySelector('.cursor-trail');
+let mouseX=0,mouseY=0,trailX=0,trailY=0;
+document.addEventListener('mousemove',e=>{mouseX=e.clientX;mouseY=e.clientY;});
+function animateCursor(){
+    cursor.style.left=mouseX+'px';
+    cursor.style.top=mouseY+'px';
+    trailX+=(mouseX-trailX)*0.15;
+    trailY+=(mouseY-trailY)*0.15;
+    trail.style.left=trailX+'px';
+    trail.style.top=trailY+'px';
+    requestAnimationFrame(animateCursor);
+}
+animateCursor();
 
-        // 自定义鼠标代码
-        const cursor = document.querySelector('.cursor');
-        const trail = document.querySelector('.cursor-trail');
-        let mouseX = 0, mouseY = 0;
-        let trailX = 0, trailY = 0;
-
-        document.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-        });
-
-        function animateCursor() {
-            // 主光标直接跟随
-            cursor.style.left = mouseX + 'px';
-            cursor.style.top = mouseY + 'px';
-
-            // 尾巴带一点延迟，有拖影效果
-            trailX += (mouseX - trailX) * 0.15;
-            trailY += (mouseY - trailY) * 0.15;
-            trail.style.left = trailX + 'px';
-            trail.style.top = trailY + 'px';
-
-            requestAnimationFrame(animateCursor);
-        }
-        animateCursor();
-    </script>
+// Live2D小人
+L2Dwidget.init({
+    model: {
+        jsonPath: "https://cdn.jsdelivr.net/npm/live2d-widget-model-miku@1.0.5/assets/miku.model.json"
+    },
+    display: {
+        position: "right",
+        width: 280,
+        height: 350,
+        hOffset: 0,
+        vOffset: 0
+    },
+    mobile: {show: true},
+    log: false
+});
+</script>
 </body>
 </html>

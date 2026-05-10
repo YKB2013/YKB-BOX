@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>怀旧系统介绍 | 我的技术小站</title>
+    <style>
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1, h2 {
+            color: #003399;
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 5px;
+        }
+        p {
+            line-height: 1.6;
+        }
+        .back-btn {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 10px 20px;
+            background-color: #0066cc;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .back-btn:hover {
+            background-color: #004c99;
+        }
+    </style>
+</head>
+<body>
+    <h1>🖥️ 经典怀旧系统介绍</h1>
+
+    <h2>1. Windows 2000（2000年发布）</h2>
+    <p>Windows 2000 是微软在2000年推出的企业级操作系统，分为专业版（Professional）和服务器版（Server/Advanced Server）。它是第一个同时面向个人和企业市场的稳定系统，奠定了NT内核的基础。</p>
+    <ul>
+        <li>✨ 首次引入了NTFS文件系统，支持更大的硬盘和文件权限管理</li>
+        <li>✅ 稳定性远超之前的Windows 98，几乎不会蓝屏崩溃</li>
+        <li>🔧 支持即插即用硬件，安装驱动比以前简单很多</li>
+        <li>⚠️ 缺点：对游戏兼容性差，不支持DirectX 8以上的游戏</li>
+    </ul>
+
+    <h2>2. Windows XP（2001年发布）</h2>
+    <p>Windows XP 是微软历史上最成功的操作系统之一，全称"eXPerience"（体验）。它把Windows 2000的稳定性和Windows 98的游戏兼容性结合在了一起，发布后统治了桌面市场长达13年！</p>
+    <ul>
+        <li>🎨 标志性的"Bliss"壁纸和 Luna 主题，成为一代人的回忆</li>
+        <li>🎮 游戏兼容性极强，DirectX 9支持几乎所有当时的3D游戏</li>
+        <li>📁 改进了资源管理器，文件管理更直观方便</li>
+        <li>🔒 内置防火墙和系统还原功能，安全性比之前大幅提升</li>
+        <li>⚠️ 2014年微软停止对XP的官方支持，现在使用有安全风险，但依然有大量用户在怀旧使用</li>
+    </ul>
+
+    <h2>为什么它们现在依然受欢迎？</h2>
+    <p>这两个系统是很多人的电脑启蒙：XP 是很多人第一次接触的图形化操作系统，而2000则是早期网吧和企业的标配。它们的经典界面、开机音乐、蓝屏画面，都成了无法替代的时代记忆。</p>
+    <p>现在，很多人依然会在虚拟机里安装它们，体验老软件、玩老游戏，重温当年的电脑时光~</p>
+
+    <a href="index.html" class="back-btn">← 返回首页</a>
+</body>
+</html>

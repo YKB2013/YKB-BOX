@@ -3,13 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>我的技术小站</title>
-    <!-- 好看免费字体 -->
-    <link rel="stylesheet" href="https://fonts.loli.net/css2?family=Inter:wght@400;500;700&display=swap">
     <style>
         body{
             text-align:center;
             margin-top:50px;
-            font-family:"Inter",微软雅黑,sans-serif;
+            font-family:"Microsoft YaHei",sans-serif;
             background:#0a0a1a;
             color:#fff;
             overflow-x:hidden;
@@ -74,6 +72,7 @@
             transition:0.3s;
         }
         .music-btn:hover{ background:#0066cc; }
+        .music-btn.hide{display:none;}
         /* 语言切换按钮 */
         .lang-btn{
             position:fixed; top:20px; left:20px;
@@ -83,23 +82,31 @@
             transition:0.3s;
         }
         .lang-btn:hover{ background:#0066cc; }
+        .offline-tip{
+            color:#ff7777;
+            font-size:15px;
+        }
+        .copyright{
+            margin-top:60px;
+            padding-top:20px;
+            border-top: 1px solid #334;
+            color:#aaa;
+            font-size:14px;
+        }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/live2d-widget@3.1.4/lib/L2Dwidget.min.js"></script>
 </head>
 <body>
+    <p class="offline-tip">⚠️ 离线模式：网盘下载链接、背景音乐、Live2D挂件需要联网才能加载</p>
     <canvas id="starfield"></canvas>
     <div class="cursor"></div>
     <div class="cursor-trail"></div>
     <div id="live2d"></div>
-
     <!-- 语言按钮 + 音乐按钮 -->
     <button class="lang-btn" onclick="toggleLang()">中/EN</button>
-    <button class="music-btn" onclick="toggleMusic()">🎵</button>
-
+    <button class="music-btn" id="musicBtn" onclick="toggleMusic()">🎵</button>
     <!-- 全部文字加 data-i18n 标记 -->
     <h1 data-i18n="title">欢迎来到我的技术小站</h1>
     <p class="desc" data-i18n="subtitle">怀旧系统科普 | Windows历史 | 电脑基础知识</p>
-
     <div>
         <a href="winold.html" class="nav-btn" data-i18n="nav1">怀旧系统介绍</a>
     </div>
@@ -112,12 +119,32 @@
     <div>
         <a href="about.html" class="nav-btn" data-i18n="nav4">关于本站</a>
     </div>
-
+    <div class="copyright">
+本项目采用 MIT License 开源协议，仅用于课程学习展示，不作商用。<br>
+源码托管在 GitHub: <a href="https://github.com/YKB2013/YKB2013.github.io" style="color:#6cf">https://github.com/YKB2013/YKB2013.github.io</a><br>
+项目维护：YKB2013 ©2026
+    </div>
     <audio id="bgm" loop>
         <source src="https://mir.sityye.com/music/nostalgia.mp3" type="audio/mpeg">
-    </audio>
-
+    
 <script>
+// ======================================
+// 离线检测
+function checkOnline(){
+    if(!navigator.onLine){
+        document.getElementById("musicBtn").classList.add("hide");
+        document.getElementById("live2d").style.display="none";
+    }
+}
+window.addEventListener('online', ()=>{
+    document.getElementById("musicBtn").classList.remove("hide");
+});
+window.addEventListener('offline', ()=>{
+    document.getElementById("musicBtn").classList.add("hide");
+    document.getElementById("live2d").style.display="none";
+});
+checkOnline();
+
 // ======================================
 // 双语数据
 const translations = {
@@ -138,7 +165,6 @@ const translations = {
         nav4: "About"
     }
 };
-
 let currentLang = "cn";
 function toggleLang() {
     currentLang = currentLang === "cn" ? "en" : "cn";
@@ -148,24 +174,22 @@ function toggleLang() {
     });
 }
 // ======================================
-
 // 三语欢迎
 alert("你好\nHello\nBonjour");
-
-// 星空背景
+// 星空背景（离线低配自动减少星星数量，防止机房卡顿）
 const canvas=document.getElementById('starfield'); const ctx=canvas.getContext('2d'); let stars=[];
 function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
 window.addEventListener('resize',resizeCanvas);resizeCanvas();
 class Star{constructor(){this.reset();}reset(){this.x=Math.random()*canvas.width;this.y=Math.random()*canvas.height;this.speed=Math.random()*0.5+0.1;this.size=Math.random()*1.5+0.5;}update(){if(this.x<0)this.reset();this.x-=this.speed;}draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.size,0,Math.PI*2);ctx.fillStyle='rgba(255,255,255,0.8)';ctx.fill();}}
-for(let i=0;i<150;i++)stars.push(new Star());
+// 离线状态减少星星数量，降低性能消耗
+const starCount = navigator.onLine ? 150 : 60;
+for(let i=0;i<starCount;i++)stars.push(new Star());
 function animate(){ctx.clearRect(0,0,canvas.width,canvas.height);stars.forEach(s=>{s.update();s.draw();});requestAnimationFrame(animate);}animate();
-
 // 鼠标
 const cursor=document.querySelector('.cursor'); const trail=document.querySelector('.cursor-trail');
 let mouseX=0,mouseY=0,trailX=0,trailY=0;
 document.addEventListener('mousemove',e=>{mouseX=e.clientX;mouseY=e.clientY;});
 function animateCursor(){cursor.style.left=mouseX+'px';cursor.style.top=mouseY+'px';trailX+=(mouseX-trailX)*0.15;trailY+=(mouseY-trailY)*0.15;trail.style.left=trailX+'px';trail.style.top=trailY+'px';requestAnimationFrame(animateCursor);}animateCursor();
-
 // 点击花瓣
 document.addEventListener('click',function(e){
     let colors=['#ff8fab','#ffc2d1','#dee2ff','#ffd6a5','#fdffb6'];
@@ -177,10 +201,15 @@ document.addEventListener('click',function(e){
         setTimeout(()=>p.remove(),1000);
     }
 });
-
-// Live2D
-L2Dwidget.init({model:{jsonPath:"https://cdn.jsdelivr.net/npm/live2d-widget-model-miku@1.0.5/assets/miku.model.json"},display:{position:"right",width:280,height:350},mobile:{show:true},log:false});
-
+// Live2D 仅在线加载
+if(navigator.onLine){
+    const script = document.createElement('script');
+    script.src = "https://cdn.jsdelivr.net/npm/live2d-widget@3.1.4/lib/L2Dwidget.min.js";
+    script.onload = function(){
+        L2Dwidget.init({model:{jsonPath:"https://cdn.jsdelivr.net/npm/live2d-widget-model-miku@1.0.5/assets/miku.model.json"},display:{position:"right",width:280,height:350},mobile:{show:true},log:false});
+    }
+    document.head.appendChild(script);
+}
 // 音乐
 const bgm=document.getElementById("bgm"); let playing=false;
 function toggleMusic(){if(!playing){bgm.play();playing=true;document.querySelector(".music-btn").innerText="🔇";}else{bgm.pause();playing=false;document.querySelector(".music-btn").innerText="🎵";}}
